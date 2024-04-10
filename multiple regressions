@@ -1,0 +1,48 @@
+# Predict the Sepal.Length values using the model
+
+library(datasets)
+
+# Load the Iris dataset
+data(iris)
+
+# View the structure of the Iris dataset
+str(iris)
+
+# Create a multiple regression model with Sepal.Length as the response variable 
+# and Sepal.Width, Petal.Length, and Petal.Width as predictor variables
+iris_model <- lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width, data = iris)
+
+# Summary of the Iris model
+summary(iris_model)
+
+# Scatterplot of Sepal.Width vs Sepal.Length
+plot(iris$Sepal.Width, iris$Sepal.Length, 
+     main = "Scatterplot of Sepal Width vs Sepal Length", 
+     xlab = "Sepal Width", ylab = "Sepal Length", 
+     col = "blue", pch = 19)
+
+# Add the regression line for Iris dataset
+abline(iris_model, col = "red")
+
+# Add legend for Iris dataset
+legend("topright", legend = "Iris Regression Line", col = "red", lty = 1)
+
+
+predictions <- predict(iris_model)
+# Calculate R-squared
+rsquared <- summary(iris_model)$r.squared
+
+# Calculate Adjusted R-squared
+adj_rsquared <- summary(iris_model)$adj.r.squared
+
+# Calculate RMSE
+rmse <- sqrt(mean((predictions - iris$Sepal.Length)^2))
+
+# Calculate MAE
+mae <- mean(abs(predictions - iris$Sepal.Length))
+
+# Print the metrics
+cat("R-squared:", rsquared, "\n")
+cat("Adjusted R-squared:", adj_rsquared, "\n")
+cat("RMSE:", rmse, "\n")
+cat("MAE:", mae, "\n")
