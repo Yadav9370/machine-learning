@@ -1,0 +1,17 @@
+library(randomForest)
+library(caret)
+data(iris)
+set.seed(123)
+trainIndex <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
+trainData <- iris[trainIndex, ]
+testData <- iris[-trainIndex, ]
+model <- randomForest(Species ~ ., data = trainData)
+predictions <- predict(model, testData)
+conf_matrix <- confusionMatrix(predictions, testData$Species)
+print(conf_matrix)
+
+# Plot confusion matrix
+plot(conf_matrix$table, col = c("darkgreen", "lightgreen", "red"), 
+     main = "Confusion Matrix for Random Forest Model",
+     xlab = "Predicted Class", ylab = "Actual Class")
+summary(conf_matrix)
