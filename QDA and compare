@@ -1,0 +1,27 @@
+library(MASS)
+
+data(iris)
+
+set.seed(123)
+train_indices <- sample(1:nrow(iris), 0.7*nrow(iris))
+train_data <- iris[train_indices, ]
+test_data <- iris[-train_indices, ]
+
+qda_model <- qda(Species ~ ., data = train_data)
+
+qda_predictions <- predict(qda_model, newdata = test_data)
+
+qda_accuracy <- sum(qda_predictions$class == test_data$Species) /nrow(test_data)
+
+print(paste("QDA Model Accuracy:", qda_accuracy))
+
+(log_reg_model) 
+log_reg_model <- glm(Species ~ ., data = train_data, family = binomial)
+
+log_reg_predictions <- predict(log_reg_model, newdata = test_data, type = "response")
+
+log_reg_classes <- ifelse(log_reg_predictions > 0.5, "versicolor", "non- versicolor")
+
+log_reg_accuracy <- sum(log_reg_classes == test_data$Species) /nrow(test_data)
+
+print(paste("Logistic Regression Model Accuracy:", log_reg_accuracy))
