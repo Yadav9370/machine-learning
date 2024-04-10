@@ -1,0 +1,34 @@
+install.packages("segmented")
+library(segmented)
+library(ggplot2) # for plotting (optional)
+# Load dataset
+data(warpbreaks)
+# Convert 'wool' factor to numeric
+warpbreaks$wool <- as.numeric(warpbreaks$wool)
+# Define predictor and response variables
+x <- warpbreaks$breaks
+y <- warpbreaks$wool
+# Perform k-fold cross-validation to choose the optimal number of cutsset.seed(123) # for reproducibility
+cv_results <- rep(NA, 10) # Initialize vector to store cross-validationresults
+for (i in 1:10) {
+  fold_indices <- sample(1:10, nrow(warpbreaks), replace = TRUE)
+  
+  # Define formula inside the loop
+  formula <- wool ~ breaks
+  
+  cv_results[i] <- mean(sapply(1:10, function(k) {
+    train_data <- warpbreaks[fold_indices != k, ]
+    test_data <- warpbreaks[fold_indices == k, ]
+    model <- segmented(lm(formula, data = train_data), seg.Z = ~breaks)
+    predictions <- predict(model, newdata = test_data)
+    mean((predictions - test_data$wool)^2)
+  }))
+}
+# Choose the optimal number of cuts with the lowest mean squarederror
+optimal_cuts <- which.min(cv_results)
+cat("Optimal number of cuts chosen:", optimal_cuts, "\n")
+# Fit the step function with the optimal number of cuts
+step_model <- segmented(lm(wool ~ breaks, data = warpbreaks), seg.Z=~breaks, control = seg.control(quant = TRUE))
+# Plot the fit to the data
+plot(step_model, main = "Step Function Fit to Warpbreaks Data")
+
