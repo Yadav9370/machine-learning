@@ -1,0 +1,26 @@
+data(iris)
+head(iris)
+lm_model<-lm(Petal.Length~Petal.Width,data=iris)
+summary(lm_model)
+plot(iris$Petal.Width,iris$Petal.Length,xlab="Petal Width",ylab="Petal Length",main="Simple Linear Regression")
+abline(lm_model,col="red")
+
+predictions <- predict(lm_model)
+
+# Calculate R-squared
+rsquared <- summary(lm_model)$r.squared
+
+# Calculate Adjusted R-squared
+adj_rsquared <- summary(lm_model)$adj.r.squared
+
+# Calculate RMSE
+rmse <- sqrt(mean((predictions - iris$Petal.Length)^2))
+
+# Calculate MAE
+mae <- mean(abs(predictions - iris$Petal.Length))
+
+# Print the metrics
+cat("R-squared:", rsquared, "\n")
+cat("Adjusted R-squared:", adj_rsquared, "\n")
+cat("RMSE:", rmse, "\n")
+cat("MAE:", mae, "\n")
