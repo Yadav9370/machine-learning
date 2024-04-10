@@ -1,0 +1,24 @@
+data <- c(23, 45, 67, 34, 56, 78, 90, 12, 45, 67)
+
+num_bootstraps <- 1000
+
+compute_mean <- function(x) {
+  return(mean(x))
+  25
+}
+
+bootstrap_means <- numeric(num_bootstraps)
+
+for (i in 1:num_bootstraps) {
+ 
+  bootstrap_sample <- sample(data, replace = TRUE)
+  
+  bootstrap_means[i] <- compute_mean(bootstrap_sample)
+}
+
+mean_estimate <- mean(bootstrap_means)
+
+confidence_interval <- quantile(bootstrap_means, c(0.025, 0.975))
+
+print(paste("Bootstrap estimate of mean:", mean_estimate))
+print(paste("95% Confidence interval:", confidence_interval))
