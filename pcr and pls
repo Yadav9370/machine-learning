@@ -1,0 +1,26 @@
+install.packages("pls")
+
+library(pls)
+library(MASS)
+
+data(Boston)
+
+set.seed(123) 
+train_index <- sample(1:nrow(Boston), 0.7 * nrow(Boston)) 
+train_data <- Boston[train_index, ]
+test_data <- Boston[-train_index, ]
+
+pcr_model <- pcr(medv ~ ., data = train_data, scale = TRUE, validation="CV")
+
+pls_model <- plsr(medv ~ ., data = train_data, scale = TRUE, validation="CV")
+
+test_pred_pcr <- predict(pcr_model, newdata = test_data)
+rmse_pcr <- sqrt(mean((test_pred_pcr - test_data$medv)^2))
+cat("PCR Model Test Error (RMSE):", rmse_pcr, "\n")
+
+test_pred_pls <- predict(pls_model, newdata = test_data)
+rmse_pls <- sqrt(mean((test_pred_pls - test_data$medv)^2))
+32
+cat("PLS Model Test Error (RMSE):", rmse_pls, "\n")
+summary(pcr_model)
+summary(pls_model)
