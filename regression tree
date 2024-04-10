@@ -1,0 +1,32 @@
+install.packages("rpart.plot")
+library(rpart)
+library(rpart.plot)
+
+# Load dataset (You can replace this with your own dataset)
+data(mtcars)
+
+# Fit a regression tree with larger size
+model <- rpart(mpg ~ ., data = mtcars, control = rpart.control(maxdepth = 5, minsplit = 10))
+
+# Visualize the tree
+rpart.plot(model, main = "Regression Tree with Larger Size")
+
+# Evaluate model performance
+predictions <- predict(model, newdata = mtcars)
+actual <- mtcars$mpg
+
+# Calculate metrics
+mse <- mean((predictions - actual)^2)
+rmse <- sqrt(mse)
+mae <- mean(abs(predictions - actual))
+rsquared <- 1 - sum((actual - predictions)^2) / sum((actual - mean(actual))^2)
+
+# Print metrics
+cat("Mean Squared Error (MSE):", mse, "\n")
+cat("Root Mean Squared Error (RMSE):", rmse, "\n")
+cat("Mean Absolute Error (MAE):", mae, "\n")
+cat("R-squared:", rsquared, "\n")
+
+# Summary of the model
+summary(model)
+
