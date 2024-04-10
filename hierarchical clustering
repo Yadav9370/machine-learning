@@ -1,0 +1,35 @@
+data(mtcars)
+
+
+subset_data <- mtcars[, c('mpg', 'disp', 'hp')]
+
+
+dist_matrix <- dist(subset_data)  
+hclust_result <- hclust(dist_matrix)  
+
+
+plot(hclust_result, hang = -1, main = "Dendrogram of Hierarchical Clustering")
+
+if (!requireNamespace("cluster", quietly = TRUE)) {
+  install.packages("cluster")
+}
+library(cluster)
+
+
+subset_data <- mtcars[, c('mpg', 'disp', 'hp')]
+
+
+clusters <- cutree(hclust_result, k = 3)
+sil <- silhouette(clusters, dist_matrix)
+
+str(sil)
+plot(subset_data, col = clusters, main = "Hierarchical Clustering with 3 Clusters")
+
+
+cluster_summary <- table(clusters)
+cat("Number of clusters:", length(cluster_summary), "\n")
+cat("Cluster sizes:\n")
+print(cluster_summary)
+
+
+
